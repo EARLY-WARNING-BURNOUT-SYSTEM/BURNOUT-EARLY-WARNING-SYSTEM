@@ -1,0 +1,125 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+// Function to calculate burnout score
+float calculateBurnout(int work_hours, int sleep_hours, int stress_level) {
+    return (work_hours * 0.4) + (stress_level * 0.4) - (sleep_hours * 0.2);
+}
+
+// Function to simulate Google Alerts
+void sendAlert(float score) {
+    FILE *fp = fopen("google_alerts.txt", "a");
+    if (fp == NULL) {
+        printf("❌ Error opening Google Alerts service!\n");
+        return;
+    }
+
+    fprintf(fp, "🚨 GOOGLE ALERT: High Burnout Detected | Score: %.2f\n", score);
+    fclose(fp);
+
+    printf("🚨 Google Alert sent to registered email!\n");
+}
+
+// Function to simulate Google Sheets logging
+void saveToGoogleSheets(int work, int sleep, int stress, float score) {
+    FILE *fp = fopen("google_sheets.csv", "a");
+    if (fp == NULL) {
+        printf("❌ Error connecting to Google Sheets!\n");
+        return;
+    }
+
+    time_t t;
+    time(&t);
+    fprintf(fp, "%s,%d,%d,%d,%.2f\n", ctime(&t), work, sleep, stress, score);
+    fclose(fp);
+
+    printf("📊 Data synced to Google Sheets successfully!\n");
+}
+
+// Recommendation Engine
+void recommendations(float score) {
+    printf("\n🧠 AI-Based Recommendations (Simulated):\n");
+
+    if (score < 5) {
+        printf("• Maintain current routine\n");
+        printf("• Continue healthy sleep cycle\n");
+    } 
+    else if (score <= 7) {
+        printf("• Reduce screen time\n");
+        printf("• Practice meditation\n");
+        printf("• Increase sleep by 1 hour\n");
+    } 
+    else {
+        printf("• Immediate rest required\n");
+        printf("• Reduce workload\n");
+        printf("• Consult health professional\n");
+    }
+}
+
+// Burnout Trend Analysis
+void trendAnalysis(float score) {
+    printf("\n📈 Burnout Trend Analysis:\n");
+
+    if (score < 5)
+        printf("Trend: Stable and Healthy 📗\n");
+    else if (score <= 7)
+        printf("Trend: Gradually Increasing ⚠️\n");
+    else
+        printf("Trend: Critical Level 🔥\n");
+}
+
+int main() {
+    int work_hours, sleep_hours, stress_level;
+    float burnout_score;
+    char confirm;
+
+    printf("\n====== GOOGLE BURNOUT EARLY WARNING SYSTEM ======\n");
+
+    // Google Forms style input
+    printf("Enter work hours per day (Google Forms): ");
+    scanf("%d", &work_hours);
+
+    printf("Enter sleep hours per day (Google Fit): ");
+    scanf("%d", &sleep_hours);
+
+    printf("Enter stress level (1-10) (Google Health): ");
+    scanf("%d", &stress_level);
+
+    // Burnout calculation
+    burnout_score = calculateBurnout(work_hours, sleep_hours, stress_level);
+
+    printf("\n🔍 Burnout Score Analysis: %.2f\n", burnout_score);
+
+    if (burnout_score < 5)
+        printf("Status: ✅ Normal Condition\n");
+    else if (burnout_score <= 7)
+        printf("Status: ⚠ Moderate Burnout Risk\n");
+    else
+        printf("Status: ❌ High Burnout Risk\n");
+
+    // Recommendation Engine
+    recommendations(burnout_score);
+
+    // Trend Analysis
+    trendAnalysis(burnout_score);
+
+    // Google Sheets logging
+    saveToGoogleSheets(work_hours, sleep_hours, stress_level, burnout_score);
+
+    // Google Alert Trigger
+    if (burnout_score > 7) {
+        printf("\nSend Google Alert? (y/n): ");
+        scanf(" %c", &confirm);
+
+        if (confirm == 'y' || confirm == 'Y')
+            sendAlert(burnout_score);
+        else
+            printf("🚫 Alert cancelled by user.\n");
+    }
+
+    printf("\n✅ System execution completed successfully.\n");
+    printf("===============================================\n");
+
+    return 0;
+}
