@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Google Burnout Early Warning System – MVP</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#eef2f7;
+}
+.container{
+    width:450px;
+    margin:40px auto;
+    background:#ffffff;
+    padding:25px;
+    border-radius:10px;
+    box-shadow:0 0 15px rgba(0,0,0,0.15);
+}
+h1{
+    text-align:center;
+    color:#333;
+}
+label{
+    display:block;
+    margin-top:15px;
+}
+input{
+    width:100%;
+    padding:8px;
+    margin-top:5px;
+}
+button{
+    width:100%;
+    padding:10px;
+    margin-top:20px;
+    background:#1a73e8;
+    color:white;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+}
+button:hover{
+    background:#0c5bd3;
+}
+.hidden{
+    display:none;
+}
+#status{
+    font-weight:bold;
+}
+.footer{
+    margin-top:20px;
+    font-size:12px;
+    text-align:center;
+    color:#666;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h1>🧠 Google Burnout Early Warning System</h1>
+
+<form id="burnoutForm">
+<label>Work Hours per Day (Google Forms)</label>
+<input type="number" id="work" required>
+
+<label>Sleep Hours per Day (Google Fit)</label>
+<input type="number" id="sleep" required>
+
+<label>Stress Level (1–10) (Google Health)</label>
+<input type="number" id="stress" min="1" max="10" required>
+
+<button type="submit">Analyze Burnout</button>
+</form>
+
+<div id="result" class="hidden">
+<h2>🔍 Burnout Analysis</h2>
+<p id="score"></p>
+<p id="status"></p>
+<p id="recommendation"></p>
+<button id="alertBtn" class="hidden">🚨 Send Google Alert</button>
+</div>
+
+<div class="footer">
+MVP Prototype • Backend Logic implemented in C • Alerts & Sheets simulated
+</div>
+</div>
+
+<script>
+document.getElementById("burnoutForm").addEventListener("submit",function(e){
+    e.preventDefault();
+
+    let work=parseInt(document.getElementById("work").value);
+    let sleep=parseInt(document.getElementById("sleep").value);
+    let stress=parseInt(document.getElementById("stress").value);
+
+    // SAME FORMULA AS C CODE
+    let score=(work*0.4)+(stress*0.4)-(sleep*0.2);
+
+    document.getElementById("result").classList.remove("hidden");
+    document.getElementById("score").innerText="Burnout Score: "+score.toFixed(2);
+
+    let status="",recommendation="";
+
+    if(score<5){
+        status="✅ Normal Condition";
+        recommendation="Maintain healthy routine and proper sleep.";
+        document.getElementById("alertBtn").classList.add("hidden");
+    }
+    else if(score<=7){
+        status="⚠ Moderate Burnout Risk";
+        recommendation="Reduce workload, meditate, increase rest.";
+        document.getElementById("alertBtn").classList.add("hidden");
+    }
+    else{
+        status="❌ High Burnout Risk";
+        recommendation="Immediate rest required. Seek professional help.";
+        document.getElementById("alertBtn").classList.remove("hidden");
+    }
+
+    document.getElementById("status").innerText=status;
+    document.getElementById("recommendation").innerText="🧠 Recommendation: "+recommendation;
+});
+
+// Google Alert Simulation
+document.getElementById("alertBtn").addEventListener("click",function(){
+    alert("🚨 Google Alert Sent to Registered Email (Simulated)");
+});
+</script>
+
+</body>
+</html>
